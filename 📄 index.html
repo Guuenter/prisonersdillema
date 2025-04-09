@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prisoner's Dilemma</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .game-container {
+      background: #222;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+    }
+    h1 { margin-bottom: 1rem; }
+    button {
+      margin: 1rem;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .coop { background: #4caf50; color: white; }
+    .defect { background: #f44336; color: white; }
+    .results { margin-top: 2rem; }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Prisoner's Dilemma</h1>
+    <p>Cooperate = +3 pts each | Defect = +5 for you, 0 for them | Both Defect = 1 pt each</p>
+    <p>Round: <span id="round">1</span>/10</p>
+    <p>Your Score: <span id="playerScore">0</span> | Bot Score: <span id="botScore">0</span></p>
+
+    <button class="coop" onclick="playRound('cooperate')">Cooperate</button>
+    <button class="defect" onclick="playRound('defect')">Defect</button>
+
+    <div class="results">
+      <p id="resultText"></p>
+    </div>
+  </div>
+
+  <script>
+    let round = 1;
+    let playerScore = 0;
+    let botScore = 0;
+
+    const scoreMap = {
+      'cooperate_cooperate': [3, 3],
+      'cooperate_defect': [0, 5],
+      'defect_cooperate': [5, 0],
+      'defect_defect': [1, 1]
+    };
+
+    function playRound(playerChoice) {
+      if (round > 10) return;
+
+      const botChoice = Math.random() < 0.5 ? 'cooperate' : 'defect';
+      const key = `${playerChoice}_${botChoice}`;
+      const [playerPts, botPts] = scoreMap[key];
+
+      playerScore += playerPts;
+      botScore += botPts;
+
+      document.getElementById('playerScore').innerText = playerScore;
+      document.getElementById('botScore').innerText = botScore;
+      document.getElementById('round').innerText = round;
+
+      document.getElementById('resultText').innerText =
+        `You chose: ${playerChoice.toUpperCase()} | Bot chose: ${botChoice.toUpperCase()} → You get ${playerPts}, Bot gets ${botPts}`;
+
+      round++;
+      if (round > 10) {
+        document.getElementById('resultText').innerText += `\nGame Over! Final Score → You: ${playerScore}, Bot: ${botScore}`;
+      }
+    }
+  </script>
+</body>
+</html>
